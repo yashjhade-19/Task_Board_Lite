@@ -1,8 +1,10 @@
 package com.taskboard.taskboard.controller;
 
+import com.taskboard.taskboard.dto.TaskRequestDTO;
+import com.taskboard.taskboard.dto.TaskResponseDTO;
+import com.taskboard.taskboard.dto.TaskStatusUpdateDTO;
 import com.taskboard.taskboard.model.Priority;
 import com.taskboard.taskboard.model.Status;
-import com.taskboard.taskboard.model.Task;
 import com.taskboard.taskboard.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +24,14 @@ public class TaskController {
 
     // ---------------- Create ----------------
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskResponseDTO createTask(
+            @Valid @RequestBody TaskRequestDTO dto) {
+        return taskService.createTask(dto);
     }
 
     // ---------------- Read ----------------
     @GetMapping
-    public List<Task> getAllTasks(
+    public List<TaskResponseDTO> getAllTasks(
             @RequestParam(required = false) Status status,
             @RequestParam(required = false) Priority priority
     ) {
@@ -36,25 +39,26 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public TaskResponseDTO getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
-    // ---------------- Update ----------------
+    // ---------------- Update (FULL) ----------------
     @PutMapping("/{id}")
-    public Task updateTask(
+    public TaskResponseDTO updateTask(
             @PathVariable Long id,
-            @Valid @RequestBody Task task
+            @Valid @RequestBody TaskRequestDTO dto
     ) {
-        return taskService.updateTask(id, task);
+        return taskService.updateTask(id, dto);
     }
 
+    // ---------------- Update (STATUS ONLY) ----------------
     @PatchMapping("/{id}/status")
-    public Task updateStatus(
+    public TaskResponseDTO updateStatus(
             @PathVariable Long id,
-            @RequestParam Status status
+            @Valid @RequestBody TaskStatusUpdateDTO dto
     ) {
-        return taskService.updateStatus(id, status);
+        return taskService.updateStatus(id, dto.getStatus());
     }
 
     // ---------------- Delete ----------------

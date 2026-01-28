@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
+    List<Task> findAllByOrderByCreatedAtDesc();
+
     // Find by status
     List<Task> findByStatus(Status status);
 

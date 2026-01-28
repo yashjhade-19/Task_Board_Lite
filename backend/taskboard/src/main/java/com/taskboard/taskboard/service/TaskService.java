@@ -7,11 +7,16 @@ import com.taskboard.taskboard.model.Status;
 import com.taskboard.taskboard.model.Task;
 import com.taskboard.taskboard.repository.TaskRepository;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
+
+
 
 @Service
 public class TaskService {
+
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
 
     private final TaskRepository taskRepository;
 
@@ -22,6 +27,7 @@ public class TaskService {
 
     // ---------------- Create ----------------
     public TaskResponseDTO createTask(TaskRequestDTO dto) {
+        log.info("Creating task with title={}", dto.getTitle());
         Task task = new Task();
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
@@ -44,7 +50,7 @@ public class TaskService {
         else if (priority != null)
             tasks = taskRepository.findByPriority(priority);
         else
-            tasks = taskRepository.findAll();
+            tasks = taskRepository.findAllByOrderByCreatedAtDesc();
 
         return tasks.stream().map(this::mapToResponse).toList();
     }
@@ -60,6 +66,8 @@ public class TaskService {
 
     // ---------------- Update ----------------
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO dto) {
+        log.info("Updating task id={}", id);
+
 
         Task existing = getTaskEntity(id);
 
@@ -82,6 +90,7 @@ public class TaskService {
 
     // ---------------- Delete ----------------
     public void deleteTask(Long id) {
+        log.info("Deleting task id={}", id);
         if (!taskRepository.existsById(id)) {
             throw new ResourceNotFoundException("Task not found with id " + id);
 

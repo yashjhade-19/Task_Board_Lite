@@ -13,19 +13,16 @@ import {
 
 
 export default function TaskBoard() {
-  // -------- core data --------
+ 
   const [tasks, setTasks] = useState([]);
 
-  // -------- filters --------
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [searchText, setSearchText] = useState("");
 
-  // -------- ui states --------
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // -------- modal state --------
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
